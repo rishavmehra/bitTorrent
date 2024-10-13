@@ -2,8 +2,13 @@ package torrentfile
 
 import (
 	"fmt"
+	"net/http"
 	"net/url"
 	"strconv"
+	"time"
+
+	"github.com/jackpal/bencode-go"
+	"github.com/rishavmehra/bitTorrent/peers"
 )
 
 /*
@@ -47,4 +52,30 @@ func (t *TorrentFile) buildTrackerURL(peerID [20]byte, port uint16) (string, err
 	base.RawQuery = params.Encode()
 	fmt.Println("Peers from the tracker URL: ", base.String())
 	return base.String(), nil
+}
+
+type bencodeTrackerResp struct {
+	Interval int    `bencode:"interval"`
+	Peers    string `bencode:"peers"`
+}
+
+func (t *TorrentFile) requestPeers(peerID [20]byte, port uint16) ([]peers.Peer, error) {
+	url, err := t.buildTrackerURL(peerID, port)
+	if err != nil {
+		return nil, err
+	}
+
+	c := &http.Client{Timeout: 15 * time.Second}
+	resp, err := c.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	trackerResp := bencodeTrackerResp{}
+	err = bencode.Unmarshal(resp.Body, &trackerResp)
+	if err != nil {
+		return nil, err
+	}
+	return peers.Unmarshal([]byte(trackerResp.Peers))
 }
