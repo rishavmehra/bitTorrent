@@ -9,6 +9,7 @@ import (
 	"github.com/jackpal/bencode-go"
 )
 
+// https://www.bittorrent.org/index.html
 func Open(path string) (TorrentFile, error) {
 	file, err := os.Open(path)
 	if err != nil {

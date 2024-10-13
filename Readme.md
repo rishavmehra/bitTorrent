@@ -1,6 +1,18 @@
 ## What torrent file holds
 The .torrent file holds all critical meta yet static information about the content, like
 
+Docs: https://www.bittorrent.org/index.html
+---
+BitTorrent Flow
+- Find Peers
+  - Open .torrent file (Parsing file)
+  - Peers from the Tracker (Tracker we recevied in .torrent file)
+  - Parse Response of the Tracker
+- Download from the Peers
+  - TCP Connection
+  - Complete the Handshake
+
+
 `announce` - holds the URL of the tracker
 
 `created by` - name and version of the program who created it
