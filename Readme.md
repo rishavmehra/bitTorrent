@@ -2,15 +2,24 @@
 The .torrent file holds all critical meta yet static information about the content, like
 
 Docs: https://www.bittorrent.org/index.html
+
+![alt text](image.png)
 ---
 BitTorrent Flow
-- Find Peers
-  - Open .torrent file (Parsing file)
-  - Peers from the Tracker (Tracker we recevied in .torrent file)
-  - Parse Response of the Tracker
-- Download from the Peers
-  - TCP Connection
-  - Complete the Handshake
+
+- [X] **Find Peers**
+  - [X] Open .torrent file (Parsing file)
+  - [X] Peers from the Tracker (Tracker received in .torrent file)
+  - [X] Parse Response of the Tracker
+- [] **Download from the Peers**
+  - [X] TCP Connection
+  - [X] Complete the Handshake
+  - [X] Send and receive messages
+    - [X] Interpreting messages
+    - [X] Bitfields 
+  - [] Join all together
+    - [] Managing concurrency: channels as queues
+    - [] Managing state
 
 
 `announce` - holds the URL of the tracker
