@@ -4,6 +4,8 @@ The .torrent file holds all critical meta yet static information about the conte
 Docs: https://www.bittorrent.org/index.html
 
 ![alt text](image.png)
+
+![alt text](image-1.png)
 ---
 BitTorrent Flow
 
@@ -11,15 +13,19 @@ BitTorrent Flow
   - [X] Open .torrent file (Parsing file)
   - [X] Peers from the Tracker (Tracker received in .torrent file)
   - [X] Parse Response of the Tracker
-- [] **Download from the Peers**
+- [X] **Download from the Peers**
   - [X] TCP Connection
   - [X] Complete the Handshake
   - [X] Send and receive messages
     - [X] Interpreting messages
     - [X] Bitfields 
-  - [] Join all together
-    - [] Managing concurrency: channels as queues
-    - [] Managing state
+  - [X] Join all together
+    - [X] Managing concurrency: channels as queues
+      - [X] peer-to-peer connection
+    - [X] Managing state
+- [ ] **Final touch for main.go**
+- [ ] **Multifile Torrents**
+- [ ] **Better Error handling for buffers**
 
 
 `announce` - holds the URL of the tracker

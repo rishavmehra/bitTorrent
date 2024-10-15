@@ -1,0 +1,6 @@
+*.torrent
+bitTorrent
+app
+
+// will remove after final touch
+main.go 
