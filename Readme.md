@@ -1,7 +1,9 @@
 ## What torrent file holds
 The .torrent file holds all critical meta yet static information about the content, like
 
-Docs: https://www.bittorrent.org/index.html
+Docs: 
+  - https://www.bittorrent.org/index.html
+  - https://wiki.theory.org/BitTorrentSpecification
 
 ![alt text](image.png)
 
@@ -27,6 +29,7 @@ BitTorrent Flow
 - [ ] **Multifile Torrents**
 - [ ] **Better Error handling for buffers**
 
+---
 
 `announce` - holds the URL of the tracker
 
@@ -46,7 +49,8 @@ Given that the file is split into equal-length pieces, the info dictionary also 
 
 `pieces` - SHA1 of every piece of the file concatenated
 
-piece length - number of bytes in each piece
+`piece length` - number of bytes in each piece
+---
 
 ```
  d

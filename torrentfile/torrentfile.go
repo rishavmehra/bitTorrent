@@ -2,12 +2,16 @@ package torrentfile
 
 import (
 	"bytes"
+	"crypto/rand"
 	"crypto/sha1"
 	"fmt"
 	"os"
 
 	"github.com/jackpal/bencode-go"
+	"github.com/rishavmehra/bitTorrent/p2p"
 )
+
+const Port uint16 = 6881
 
 type bencodeTorrent struct {
 	Announce string      `bencode:"announce"`
@@ -17,8 +21,8 @@ type bencodeTorrent struct {
 type bencodeInfo struct {
 	Pieces      string `bencode:"pieces"`
 	PieceLength int    `bencode:"piece length"`
-	Name        string `bencode:"name"`
 	Length      int    `bencode:"length"`
+	Name        string `bencode:"name"`
 }
 
 type TorrentFile struct {
@@ -26,11 +30,10 @@ type TorrentFile struct {
 	InfoHash    [20]byte
 	PieceHashes [][20]byte
 	PieceLength int
-	Lenght      int
+	Length      int
 	Name        string
 }
 
-// https://www.bittorrent.org/index.html
 func Open(path string) (TorrentFile, error) {
 	file, err := os.Open(path)
 	if err != nil {
@@ -61,7 +64,7 @@ func (bto *bencodeTorrent) toTorrentFile() (TorrentFile, error) {
 		InfoHash:    infoHash,
 		PieceHashes: pieceHashes,
 		PieceLength: bto.Info.PieceLength,
-		Lenght:      bto.Info.Length,
+		Length:      bto.Info.Length,
 		Name:        bto.Info.Name,
 	}
 	return t, nil
@@ -84,10 +87,51 @@ func (i *bencodeInfo) splitPieceHashes() ([][20]byte, error) {
 
 func (i *bencodeInfo) hash() ([20]byte, error) {
 	var buf bytes.Buffer
-	err := bencode.Marshal(&buf, i) //
+	err := bencode.Marshal(&buf, *i) //
 	if err != nil {
 		return [20]byte{}, err
 	}
 	h := sha1.Sum(buf.Bytes())
 	return h, nil
+}
+
+func (t *TorrentFile) DownloadToFile(path string) error {
+	var peerID [20]byte
+	_, err := rand.Read(peerID[:])
+	if err != nil {
+		return err
+	}
+
+	peers, err := t.requestPeers(peerID, Port)
+	if err != nil {
+		return err
+	}
+
+	torrent := p2p.Torrent{
+		Peers:       peers,
+		PeerID:      peerID,
+		InfoHash:    t.InfoHash,
+		PieceHashes: t.PieceHashes,
+		PieceLength: t.PieceLength,
+		Length:      t.Length,
+		Name:        t.Name,
+	}
+
+	buf, err := torrent.Download()
+	if err != nil {
+		return err
+	}
+
+	outFile, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer outFile.Close()
+
+	_, err = outFile.Write(buf)
+	if err != nil {
+		return err
+	}
+	return nil
+
 }

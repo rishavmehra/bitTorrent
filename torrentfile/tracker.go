@@ -47,7 +47,7 @@ func (t *TorrentFile) buildTrackerURL(peerID [20]byte, port uint16) (string, err
 		"uploaded":  []string{"0"},
 		"download":  []string{"0"},
 		"compact":   []string{"1"},
-		"left":      []string{strconv.Itoa(t.Lenght)},
+		"left":      []string{strconv.Itoa(t.Length)},
 	}
 	base.RawQuery = params.Encode()
 	fmt.Println("Peers from the tracker URL: ", base.String())
