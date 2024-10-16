@@ -65,7 +65,7 @@ func (state *pieceProgress) readMessage() error {
 		if err != nil {
 			return err
 		}
-		state.client.Bitfield.SetPieces(index)
+		state.client.Bitfield.SetPiece(index)
 	case message.MsgPiece:
 		n, err := message.ParsePiece(state.index, state.buf, msg)
 		if err != nil {
@@ -76,6 +76,8 @@ func (state *pieceProgress) readMessage() error {
 	}
 	return nil
 }
+
+const MaxBlockSize = 16384
 
 func attemptDownloadPiece(c *client.Client, pw *pieceWork) ([]byte, error) {
 	state := pieceProgress{
@@ -88,8 +90,8 @@ func attemptDownloadPiece(c *client.Client, pw *pieceWork) ([]byte, error) {
 
 	for state.downloaded < pw.length {
 		if !state.client.Choked {
-			for state.backlog < MaxBacklog && state.requested < pw.index {
-				blockSize := MaxBacklog
+			for state.backlog < MaxBacklog && state.requested < pw.length {
+				blockSize := MaxBlockSize
 				if pw.length-state.requested < blockSize {
 					blockSize = pw.length - state.requested
 				}
@@ -112,7 +114,7 @@ func attemptDownloadPiece(c *client.Client, pw *pieceWork) ([]byte, error) {
 func checkIntegrity(pw *pieceWork, buf []byte) error {
 	hash := sha1.Sum(buf)
 	if !bytes.Equal(hash[:], pw.hash[:]) {
-		return fmt.Errorf("Index %d failed integrity check", pw.index)
+		return fmt.Errorf("index %d failed integrity check", pw.index)
 	}
 	return nil
 }
@@ -120,7 +122,7 @@ func checkIntegrity(pw *pieceWork, buf []byte) error {
 func (t *Torrent) startDownloadWorker(peer peers.Peer, workQueue chan *pieceWork, results chan *pieceResult) {
 	c, err := client.New(peer, t.PeerID, t.InfoHash)
 	if err != nil {
-		log.Printf("could not handshakw with %s. Disconnecting...\n", peer.IP)
+		log.Printf("could not handshake with %s. Disconnecting...\n", peer.IP)
 		return
 	}
 
@@ -131,7 +133,7 @@ func (t *Torrent) startDownloadWorker(peer peers.Peer, workQueue chan *pieceWork
 	c.SendInterested()
 
 	for pw := range workQueue {
-		if !c.Bitfield.HasPieces(pw.index) {
+		if !c.Bitfield.HasPiece(pw.index) {
 			workQueue <- pw
 			continue
 		}

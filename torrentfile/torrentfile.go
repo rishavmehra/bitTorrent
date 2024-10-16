@@ -46,7 +46,7 @@ func Open(path string) (TorrentFile, error) {
 	if err != nil {
 		return TorrentFile{}, err
 	}
-	fmt.Println(bto)
+	// fmt.Println(bto)
 	return bto.toTorrentFile()
 }
 
