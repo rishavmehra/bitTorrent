@@ -1,5 +1,22 @@
-## What torrent file holds
-The .torrent file holds all critical meta yet static information about the content, like
+## BitTorrent
+BitTorrent is a peer-to-peer file sharing protocol
+
+---
+
+Usage:
+
+```
+git clone git@github.com:rishavmehra/bitTorrent.git
+cd bitTorrent
+go build .
+./bitTorrent  <.torrent file> <path to save the file>
+
+example:
+  ./bitTorrent ubuntu-24.10-desktop-amd64.iso.torrent ubutnu-24.10-desktop-amd64.iso
+
+```
+---
+
 
 Docs: 
   - https://www.bittorrent.org/index.html
@@ -52,12 +69,15 @@ Given that the file is split into equal-length pieces, the info dictionary also 
 `piece length` - number of bytes in each piece
 ---
 
+
+**The .torrent file holds all critical meta yet static information about the content, like**
+
 ```
  d
   8:announce
     41:http://bttracker.debian.org:6969/announce
   7:comment
-    35:"Debian CD from cdimage.debian.org"
+    35:"Ubuntu CD from cdimage.ubuntu.com" 35:"
   13:creation date
     i1573903810e
   4:info
@@ -65,7 +85,7 @@ Given that the file is split into equal-length pieces, the info dictionary also 
       6:length
         i351272960e
       4:name
-        31:debian-10.2.0-amd64-netinst.iso
+        31:ubuntu-24.10-desktop-amd64.iso
       12:piece length
         i262144e
       6:pieces
