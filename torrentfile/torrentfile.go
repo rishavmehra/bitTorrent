@@ -57,7 +57,7 @@ func (bto *bencodeTorrent) toTorrentFile() (TorrentFile, error) {
 	}
 	pieceHashes, err := bto.Info.splitPieceHashes()
 	if err != nil {
-		return TorrentFile{}, fmt.Errorf("Error in PieceHashes: ", err)
+		return TorrentFile{}, err
 	}
 	t := TorrentFile{
 		Announce:    bto.Announce,
