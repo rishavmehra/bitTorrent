@@ -21,6 +21,7 @@ example:
 Docs: 
   - https://www.bittorrent.org/index.html
   - https://wiki.theory.org/BitTorrentSpecification
+  - https://binspec.ccio.dev/
 
 ![alt text](image.png)
 
